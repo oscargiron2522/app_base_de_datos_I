@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block titulo %}Mi panel{% endblock %}
+{% block contenido %}
+<h1>Hola, {{ usuario.nombre_completo }}</h1>
+<div class="grid grid-3">
+  <div class="tarjeta"><strong>Saldo disponible</strong><h2 style="margin:4px 0;">Q {{ billetera.saldo_disponible }}</h2></div>
+  <div class="tarjeta"><strong>Saldo en apuestas pendientes</strong><h2 style="margin:4px 0;">Q {{ billetera.saldo_retenido }}</h2></div>
+  <div class="tarjeta"><strong>Acciones</strong><br>
+    <a class="boton boton-secundario boton-pequeno" href="{% url 'billetera:deposito' %}">Depositar</a>
+    <a class="boton boton-pequeno" href="{% url 'billetera:solicitar_retiro' %}">Retirar</a>
+  </div>
+</div>
+
+<h2>Eventos disponibles</h2>
+<div class="grid grid-2">
+  {% for evento in eventos %}
+    <div class="tarjeta">
+      <h3>{{ evento.id_equipo_local }} vs {{ evento.id_equipo_visitante }}</h3>
+      <p><strong>Liga:</strong> {{ evento.id_liga }} &nbsp;|&nbsp; <strong>Hora:</strong> {{ evento.fecha_inicio|date:"d/m/Y H:i" }}</p>
+      {% for mercado in evento.mercados.all %}
+        {% if mercado.estado_mercado == "ABIERTO" %}
+          <p><strong>{{ mercado.id_tipo_mercado }}</strong></p>
+          <div class="grid grid-3">
+            {% for opcion in mercado.opciones.all %}
+              <div class="opcion-cuota" onclick="seleccionarOpcion(this, {{ opcion.id_opcion }}, '{{ evento.id_equipo_local }} vs {{ evento.id_equipo_visitante }}: {{ opcion.descripcion_opcion }}')">
+                <span>{{ opcion.descripcion_opcion }}</span><span class="valor-cuota">{{ opcion.cuota_actual }}</span>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% empty %}
+        <p><em>Sin mercados disponibles aún.</em></p>
+      {% endfor %}
+    </div>
+  {% empty %}
+    <p><em>No hay eventos programados por el momento.</em></p>
+  {% endfor %}
+</div>
+
+<div class="tarjeta boleta-flotante" style="max-width:360px;">
+  <h3>Mi boleto</h3>
+  <div id="lista-selecciones"><p><em>Selecciona una o más cuotas para armar tu boleto.</em></p></div>
+  <p>Cuota total: <strong id="cuota-total">1.00</strong></p>
+  <form method="post" action="{% url 'apuestas:crear_boleto' %}" id="form-boleto">
+    {% csrf_token %}
+    <input type="hidden" name="opciones" id="input-opciones" value="">
+    <div class="campo">
+      <label>Monto a apostar (Q)</label>
+      <input type="number" step="0.01" min="0.01" name="monto_apostado" id="input-monto" required>
+    </div>
+    <p>Ganancia potencial estimada: Q<span id="ganancia-potencial">0.00</span></p>
+    <button type="submit" class="boton boton-secundario">Confirmar apuesta</button>
+  </form>
+</div>
+
+<script>
+let seleccionadas = {};
+
+function seleccionarOpcion(el, idOpcion, etiqueta) {
+  const cuota = parseFloat(el.querySelector('.valor-cuota').textContent);
+  if (seleccionadas[idOpcion]) {
+    delete seleccionadas[idOpcion];
+    el.classList.remove('seleccionada');
+  } else {
+    seleccionadas[idOpcion] = { cuota: cuota, etiqueta: etiqueta };
+    el.classList.add('seleccionada');
+  }
+  actualizarBoleto();
+}
+
+function actualizarBoleto() {
+  const contenedor = document.getElementById('lista-selecciones');
+  const ids = Object.keys(seleccionadas);
+  if (ids.length === 0) {
+    contenedor.innerHTML = '<p><em>Selecciona una o más cuotas para armar tu boleto.</em></p>';
+  } else {
+    contenedor.innerHTML = ids.map(id => `<div>${seleccionadas[id].etiqueta} <strong>(${seleccionadas[id].cuota})</strong></div>`).join('');
+  }
+  document.getElementById('input-opciones').value = ids.join(',');
+  let cuotaTotal = 1;
+  ids.forEach(id => cuotaTotal *= seleccionadas[id].cuota);
+  document.getElementById('cuota-total').textContent = cuotaTotal.toFixed(2);
+  actualizarGanancia();
+}
+
+document.getElementById('input-monto').addEventListener('input', actualizarGanancia);
+function actualizarGanancia() {
+  const monto = parseFloat(document.getElementById('input-monto').value) || 0;
+  const cuota = parseFloat(document.getElementById('cuota-total').textContent) || 1;
+  document.getElementById('ganancia-potencial').textContent = (monto * cuota).toFixed(2);
+}
+</script>
+{% endblock %}

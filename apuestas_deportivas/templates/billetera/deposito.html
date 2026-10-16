@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block titulo %}Depositar fondos{% endblock %}
+{% block contenido %}
+<div class="tarjeta form-ancho-fijo">
+  <h1>Depositar fondos</h1>
+  <p>Saldo disponible actual: <strong>Q {{ billetera.saldo_disponible }}</strong></p>
+  <form method="post">
+    {% csrf_token %}
+    <div class="campo"><label>Método de pago</label>
+      <select name="id_metodo_pago">{% for m in metodos_pago %}<option value="{{ m.id_metodo_pago }}">{{ m.nombre_metodo }}</option>{% endfor %}</select>
+    </div>
+    <div class="campo"><label>Monto a depositar (Q)</label><input type="number" step="0.01" min="0.01" name="monto"></div>
+    <button type="submit" class="boton boton-secundario">Depositar</button>
+  </form>
+</div>
+{% endblock %}

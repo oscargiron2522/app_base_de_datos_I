@@ -1,0 +1,32 @@
+{% extends "apuestas/_panel_admin_base.html" %}
+{% block titulo %}Liquidar evento{% endblock %}
+{% block contenido_admin %}
+<h1>Liquidar evento</h1>
+<h3>{{ evento.id_equipo_local }} vs {{ evento.id_equipo_visitante }}</h3>
+
+<div class="tarjeta">
+  <form method="post">
+    {% csrf_token %}
+    <div class="grid grid-2">
+      <div class="campo"><label>Marcador local</label><input type="number" min="0" name="puntuacion_local"></div>
+      <div class="campo"><label>Marcador visitante</label><input type="number" min="0" name="puntuacion_visitante"></div>
+    </div>
+    <div class="campo"><label>Observaciones</label><textarea name="observaciones" rows="2"></textarea></div>
+
+    <h3>Selecciona la(s) opción(es) ganadora(s) por mercado</h3>
+    {% regroup opciones by id_mercado_evento as opciones_por_mercado %}
+    {% for grupo in opciones_por_mercado %}
+      <p><strong>{{ grupo.grouper.id_tipo_mercado }}</strong></p>
+      {% for opcion in grupo.list %}
+        <label style="font-weight:normal;">
+          <input type="checkbox" name="opciones_ganadoras" value="{{ opcion.id_opcion }}"> {{ opcion.descripcion_opcion }} ({{ opcion.cuota_actual }})
+        </label><br>
+      {% endfor %}
+    {% empty %}
+      <p><em>Este evento no tiene opciones de apuesta configuradas.</em></p>
+    {% endfor %}
+
+    <button type="submit" class="boton boton-peligro" style="margin-top:14px;" onclick="return confirm('¿Confirmar liquidación? Esta acción pagará automáticamente los boletos ganadores.');">Liquidar evento y pagar boletos</button>
+  </form>
+</div>
+{% endblock %}

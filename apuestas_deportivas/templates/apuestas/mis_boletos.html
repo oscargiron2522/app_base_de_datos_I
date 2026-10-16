@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block titulo %}Mis boletos{% endblock %}
+{% block contenido %}
+<h1>Mis boletos</h1>
+<div class="tabla-responsiva">
+<table>
+  <thead><tr><th>#</th><th>Selecciones</th><th>Monto</th><th>Cuota total</th><th>Ganancia potencial</th><th>Estado</th><th>Fecha</th></tr></thead>
+  <tbody>
+    {% for boleto in boletos %}
+    <tr>
+      <td>{{ boleto.id_boleto }}</td>
+      <td>
+        {% for detalle in boleto.detalles.all %}
+          {{ detalle.id_opcion.id_mercado_evento.id_evento }} - {{ detalle.id_opcion.descripcion_opcion }} ({{ detalle.cuota_momento }})<br>
+        {% endfor %}
+      </td>
+      <td>Q {{ boleto.monto_apostado }}</td>
+      <td>{{ boleto.cuota_total }}</td>
+      <td>Q {{ boleto.ganancia_potencial }}</td>
+      <td><span class="etiqueta etiqueta-{{ boleto.estado_boleto|lower }}">{{ boleto.get_estado_boleto_display }}</span></td>
+      <td>{{ boleto.fecha_emision|date:"d/m/Y H:i" }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="7"><em>Aún no has creado ningún boleto.</em></td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endblock %}

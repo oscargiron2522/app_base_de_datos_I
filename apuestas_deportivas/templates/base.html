@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block titulo %}Plataforma de Apuestas Deportivas{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+  <header class="encabezado">
+    <div class="contenedor">
+      <a class="logo" href="{% url 'panel_publico:inicio' %}">⚽ Apuestas Deportivas GT</a>
+      <nav>
+        <a href="{% url 'panel_publico:inicio' %}">Inicio</a>
+        {% if sesion_activa and sesion_tipo_usuario == 'USUARIO' %}
+          <a href="{% url 'apuestas:panel_usuario_inicio' %}">Mi panel</a>
+          <a href="{% url 'apuestas:mis_boletos' %}">Mis boletos</a>
+          <a href="{% url 'billetera:deposito' %}">Depositar</a>
+          <a href="{% url 'billetera:solicitar_retiro' %}">Retirar</a>
+          <a href="{% url 'cuentas:logout' %}">Cerrar sesión</a>
+        {% elif sesion_activa %}
+          <a href="{% url 'apuestas:panel_admin_inicio' %}">Panel administrativo</a>
+          <a href="{% url 'cuentas:logout' %}">Cerrar sesión</a>
+        {% else %}
+          <a href="{% url 'cuentas:login_usuario' %}">Iniciar sesión</a>
+          <a href="{% url 'cuentas:registro_usuario' %}">Registrarme</a>
+          <a href="{% url 'cuentas:login_admin' %}">Acceso administrativo</a>
+        {% endif %}
+      </nav>
+    </div>
+    {% if sesion_activa %}
+    <div class="contenedor usuario-sesion">Sesión activa: {{ sesion_nombre }} ({{ sesion_tipo_usuario }})</div>
+    {% endif %}
+  </header>
+
+  <main>
+    <div class="contenedor">
+      {% if messages %}
+        <div class="mensajes">
+          {% for mensaje in messages %}
+            <div class="alerta alerta-{{ mensaje.tags }}">{{ mensaje }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+      {% block contenido %}{% endblock %}
+    </div>
+  </main>
+
+  <footer class="pie">
+    <div class="contenedor">
+      &copy; {% now "Y" %} Plataforma de Apuestas Deportivas y Pronósticos. Proyecto académico. Todas las cuotas son ilustrativas.
+    </div>
+  </footer>
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>

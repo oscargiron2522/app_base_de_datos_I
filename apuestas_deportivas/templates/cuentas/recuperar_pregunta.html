@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block titulo %}Pregunta de seguridad{% endblock %}
+{% block contenido %}
+<div class="tarjeta form-ancho-fijo">
+  <h1>Verificación de identidad</h1>
+  {% if pregunta %}
+    <p><strong>{{ pregunta }}</strong></p>
+    <form method="post">
+      {% csrf_token %}
+      {% for campo in form %}
+        <div class="campo">
+          <label>{{ campo.label }}</label>
+          {{ campo }}
+          {% for error in campo.errors %}<div class="alerta alerta-error">{{ error }}</div>{% endfor %}
+        </div>
+      {% endfor %}
+      <button type="submit" class="boton">Verificar</button>
+    </form>
+  {% else %}
+    <p>No fue posible continuar con la recuperación.</p>
+  {% endif %}
+</div>
+{% endblock %}

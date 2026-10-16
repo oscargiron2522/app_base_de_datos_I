@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block titulo %}Nueva contraseña{% endblock %}
+{% block contenido %}
+<div class="tarjeta form-ancho-fijo">
+  <h1>Establecer nueva contraseña</h1>
+  <form method="post">
+    {% csrf_token %}
+    {% for campo in form %}
+      <div class="campo">
+        <label>{{ campo.label }}</label>
+        {{ campo }}
+        {% for error in campo.errors %}<div class="alerta alerta-error">{{ error }}</div>{% endfor %}
+      </div>
+    {% endfor %}
+    <button type="submit" class="boton">Guardar nueva contraseña</button>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block titulo %}Iniciar sesión{% endblock %}
+{% block contenido %}
+<div class="tarjeta form-ancho-fijo">
+  <h1>Iniciar sesión</h1>
+  <form method="post">
+    {% csrf_token %}
+    {% for campo in form %}
+      <div class="campo">
+        <label>{{ campo.label }}</label>
+        {{ campo }}
+        {% for error in campo.errors %}<div class="alerta alerta-error">{{ error }}</div>{% endfor %}
+      </div>
+    {% endfor %}
+    <button type="submit" class="boton">Ingresar</button>
+  </form>
+  <p style="margin-top:14px;">
+    <a href="{% url 'cuentas:recuperar_solicitud' %}">¿Olvidaste tu contraseña?</a> ·
+    <a href="{% url 'cuentas:registro_usuario' %}">Crear una cuenta</a>
+  </p>
+</div>
+{% endblock %}

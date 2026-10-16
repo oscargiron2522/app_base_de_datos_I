@@ -1,0 +1,179 @@
+/* ==========================================================================
+   Plataforma de Apuestas Deportivas y Pronósticos
+   Hoja de estilos general - diseño sobrio, responsivo (sin frameworks)
+   ========================================================================== */
+
+:root {
+  --color-primario: #1c4e80;
+  --color-primario-oscuro: #143a5f;
+  --color-secundario: #2e8b57;
+  --color-peligro: #b23a3a;
+  --color-advertencia: #b9862b;
+  --color-fondo: #f4f6f8;
+  --color-tarjeta: #ffffff;
+  --color-texto: #2b2b2b;
+  --color-texto-suave: #6b6b6b;
+  --color-borde: #d9dee3;
+  --radio: 6px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+  background: var(--color-fondo);
+  color: var(--color-texto);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+a { color: var(--color-primario); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.contenedor {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* --- Encabezado --- */
+header.encabezado {
+  background: var(--color-primario);
+  color: #fff;
+  padding: 14px 0;
+}
+header.encabezado .contenedor {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+header.encabezado .logo {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+}
+header.encabezado nav a {
+  color: #eef3f8;
+  margin-left: 16px;
+  font-size: 14px;
+}
+header.encabezado nav a:hover { color: #fff; text-decoration: underline; }
+.usuario-sesion {
+  font-size: 13px;
+  color: #dbe6f0;
+}
+
+/* --- Contenido principal --- */
+main { padding: 24px 0 48px; min-height: 60vh; }
+
+h1, h2, h3 { color: var(--color-primario-oscuro); }
+h1 { font-size: 26px; }
+h2 { font-size: 20px; margin-top: 30px; }
+
+/* --- Tarjetas --- */
+.tarjeta {
+  background: var(--color-tarjeta);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.grid {
+  display: grid;
+  gap: 16px;
+}
+.grid-2 { grid-template-columns: repeat(2, 1fr); }
+.grid-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+@media (max-width: 900px) {
+  .grid-3, .grid-4 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  header.encabezado .contenedor { flex-direction: column; align-items: flex-start; }
+}
+
+/* --- Botones --- */
+.boton {
+  display: inline-block;
+  background: var(--color-primario);
+  color: #fff;
+  border: none;
+  padding: 9px 16px;
+  border-radius: var(--radio);
+  cursor: pointer;
+  font-size: 14px;
+}
+.boton:hover { background: var(--color-primario-oscuro); text-decoration: none; }
+.boton-secundario { background: var(--color-secundario); }
+.boton-peligro { background: var(--color-peligro); }
+.boton-pequeno { padding: 5px 10px; font-size: 12px; }
+
+/* --- Formularios --- */
+form .campo { margin-bottom: 14px; }
+form label { display: block; margin-bottom: 4px; font-weight: 600; font-size: 13px; color: #444; }
+form input, form select, form textarea {
+  width: 100%;
+  padding: 9px 10px;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  font-size: 14px;
+  background: #fff;
+}
+form input:focus, form select:focus, form textarea:focus {
+  outline: none; border-color: var(--color-primario);
+}
+.form-ancho-fijo { max-width: 460px; margin: 0 auto; }
+
+/* --- Mensajes / alertas --- */
+.mensajes { margin-bottom: 16px; }
+.alerta { padding: 10px 14px; border-radius: var(--radio); margin-bottom: 8px; font-size: 14px; }
+.alerta-success { background: #e3f3e8; color: #23663f; border: 1px solid #b6e0c4; }
+.alerta-error { background: #fbe7e7; color: #8c2e2e; border: 1px solid #f0bcbc; }
+.alerta-warning { background: #fdf3dd; color: #8a6316; border: 1px solid #f3ddab; }
+.alerta-info { background: #e6f0f8; color: #244a68; border: 1px solid #bcd8ee; }
+
+/* --- Tablas --- */
+table { width: 100%; border-collapse: collapse; background: #fff; }
+table th, table td { padding: 9px 10px; border-bottom: 1px solid var(--color-borde); text-align: left; font-size: 13.5px; }
+table th { background: #eef2f5; color: #444; }
+.tabla-responsiva { overflow-x: auto; }
+
+/* --- Etiquetas de estado --- */
+.etiqueta { display: inline-block; padding: 2px 9px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+.etiqueta-pendiente { background: #fdf3dd; color: #8a6316; }
+.etiqueta-ganado { background: #e3f3e8; color: #23663f; }
+.etiqueta-perdido { background: #fbe7e7; color: #8c2e2e; }
+.etiqueta-programado { background: #e6f0f8; color: #244a68; }
+.etiqueta-finalizado { background: #eaeaea; color: #555; }
+
+/* --- Cuota (botón seleccionable de opción de apuesta) --- */
+.opcion-cuota {
+  display: flex; justify-content: space-between; align-items: center;
+  border: 1px solid var(--color-borde); border-radius: var(--radio);
+  padding: 8px 10px; margin-bottom: 6px; cursor: pointer; background: #fbfcfd;
+}
+.opcion-cuota:hover { border-color: var(--color-primario); }
+.opcion-cuota.seleccionada { border-color: var(--color-secundario); background: #eaf6ee; }
+.opcion-cuota .valor-cuota { font-weight: 700; color: var(--color-primario); }
+
+.boleta-flotante {
+  position: sticky; top: 16px;
+}
+
+footer.pie {
+  background: #223447; color: #cbd7e2; padding: 18px 0; margin-top: 40px; font-size: 13px;
+}
+
+.panel-lateral nav a {
+  display: block; padding: 9px 12px; border-radius: var(--radio); color: var(--color-texto); margin-bottom: 4px;
+}
+.panel-lateral nav a:hover, .panel-lateral nav a.activo { background: #eaf0f6; text-decoration: none; }
+
+.layout-panel { display: grid; grid-template-columns: 220px 1fr; gap: 20px; }
+@media (max-width: 800px) { .layout-panel { grid-template-columns: 1fr; } }

@@ -1,0 +1,12 @@
+{% extends "apuestas/_panel_admin_base.html" %}
+{% block titulo %}Panel administrativo{% endblock %}
+{% block contenido_admin %}
+<h1>Panel administrativo</h1>
+<p>Rol actual: <strong>{{ rol }}</strong></p>
+<div class="grid grid-4">
+  <div class="tarjeta"><strong>Usuarios registrados</strong><h2>{{ total_usuarios }}</h2></div>
+  <div class="tarjeta"><strong>Eventos programados</strong><h2>{{ total_eventos_programados }}</h2></div>
+  <div class="tarjeta"><strong>Boletos pendientes</strong><h2>{{ total_boletos_pendientes }}</h2></div>
+  <div class="tarjeta"><strong>Retiros pendientes</strong><h2>{{ total_solicitudes_retiro }}</h2></div>
+</div>
+{% endblock %}

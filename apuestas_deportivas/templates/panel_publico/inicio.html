@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block titulo %}Inicio - Apuestas Deportivas{% endblock %}
+{% block contenido %}
+<h1>Cartelera de eventos deportivos</h1>
+<p>Consulta las apuestas disponibles de hoy y los resultados de ayer. Para registrar un boleto necesitas <a href="{% url 'cuentas:login_usuario' %}">iniciar sesión</a>.</p>
+
+<h2>Eventos de hoy</h2>
+{% if eventos_hoy %}
+  <div class="grid grid-2">
+    {% for evento in eventos_hoy %}
+      <div class="tarjeta">
+        <span class="etiqueta etiqueta-{{ evento.estado_evento|lower }}">{{ evento.get_estado_evento_display }}</span>
+        <h3>{{ evento.id_equipo_local }} vs {{ evento.id_equipo_visitante }}</h3>
+        <p><strong>Liga:</strong> {{ evento.id_liga }} &nbsp;|&nbsp; <strong>Hora:</strong> {{ evento.fecha_inicio|date:"d/m/Y H:i" }}</p>
+        {% for mercado in evento.mercados.all %}
+          <p><strong>{{ mercado.id_tipo_mercado }}</strong></p>
+          <div class="grid grid-3">
+            {% for opcion in mercado.opciones.all %}
+              <div class="opcion-cuota"><span>{{ opcion.descripcion_opcion }}</span><span class="valor-cuota">{{ opcion.cuota_actual }}</span></div>
+            {% endfor %}
+          </div>
+        {% empty %}
+          <p><em>Aún no hay mercados configurados para este evento.</em></p>
+        {% endfor %}
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <p><em>No hay eventos programados para hoy.</em></p>
+{% endif %}
+
+<h2>Resultados de ayer</h2>
+{% if eventos_ayer %}
+  <div class="tabla-responsiva">
+  <table>
+    <thead><tr><th>Evento</th><th>Liga</th><th>Hora</th><th>Resultado</th><th>Estado</th></tr></thead>
+    <tbody>
+      {% for evento in eventos_ayer %}
+      <tr>
+        <td>{{ evento.id_equipo_local }} vs {{ evento.id_equipo_visitante }}</td>
+        <td>{{ evento.id_liga }}</td>
+        <td>{{ evento.fecha_inicio|date:"d/m/Y H:i" }}</td>
+        <td>
+          {% if evento.resultado %}
+            {{ evento.resultado.puntuacion_local }} - {{ evento.resultado.puntuacion_visitante }}
+          {% else %}
+            Sin resultado registrado
+          {% endif %}
+        </td>
+        <td><span class="etiqueta etiqueta-{{ evento.estado_evento|lower }}">{{ evento.get_estado_evento_display }}</span></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+{% else %}
+  <p><em>No hubo eventos registrados ayer.</em></p>
+{% endif %}
+{% endblock %}

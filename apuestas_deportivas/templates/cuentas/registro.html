@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block titulo %}Registro de usuario{% endblock %}
+{% block contenido %}
+<div class="tarjeta" style="max-width:640px;margin:0 auto;">
+  <h1>Crear cuenta</h1>
+  <form method="post" novalidate>
+    {% csrf_token %}
+    <div class="grid grid-2">
+      {% for campo in form %}
+        {% if campo.name == "id_municipio_us" %}
+          <div class="campo">
+            <label>{{ campo.label }}</label>
+            <select id="id_id_municipio_us" name="id_municipio_us"><option value="">Selecciona un departamento primero</option></select>
+            {% for error in campo.errors %}<div class="alerta alerta-error">{{ error }}</div>{% endfor %}
+          </div>
+        {% elif campo.name == "id_departamento_us" %}
+          <div class="campo">
+            <label>{{ campo.label }}</label>
+            <select id="id_id_departamento_us" name="id_departamento_us">
+              <option value="">Selecciona...</option>
+              {% for depto in departamentos %}
+                <option value="{{ depto.id_departamento }}">{{ depto.nombre_departamento }}</option>
+              {% endfor %}
+            </select>
+            {% for error in campo.errors %}<div class="alerta alerta-error">{{ error }}</div>{% endfor %}
+          </div>
+        {% else %}
+          <div class="campo">
+            <label>{{ campo.label }}</label>
+            {{ campo }}
+            {% for error in campo.errors %}<div class="alerta alerta-error">{{ error }}</div>{% endfor %}
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+    <button type="submit" class="boton">Registrarme</button>
+  </form>
+</div>
+<script>
+document.getElementById('id_id_departamento_us').addEventListener('change', function () {
+  var idDepto = this.value;
+  var selectMuni = document.getElementById('id_id_municipio_us');
+  selectMuni.innerHTML = '<option value="">Cargando...</option>';
+  if (!idDepto) { selectMuni.innerHTML = '<option value="">Selecciona un departamento primero</option>'; return; }
+  fetch('/cuentas/api/municipios/' + idDepto + '/')
+    .then(function (r) { return r.json(); })
+    .then(function (data) {
+      selectMuni.innerHTML = '<option value="">Selecciona...</option>';
+      data.forEach(function (m) {
+        var opt = document.createElement('option');
+        opt.value = m.id_municipio; opt.textContent = m.nombre_municipio;
+        selectMuni.appendChild(opt);
+      });
+    });
+});
+</script>
+{% endblock %}

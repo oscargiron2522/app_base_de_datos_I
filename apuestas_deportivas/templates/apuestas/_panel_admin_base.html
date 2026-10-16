@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block contenido %}
+<div class="layout-panel">
+  <aside class="panel-lateral tarjeta">
+    <nav>
+      <a href="{% url 'apuestas:panel_admin_inicio' %}">Resumen</a>
+      <a href="{% url 'apuestas:admin_eventos' %}">Eventos y mercados</a>
+      <a href="{% url 'billetera:admin_solicitudes_retiro' %}">Solicitudes de retiro</a>
+      <a href="/admin/" target="_blank">Administración total (Django admin)</a>
+    </nav>
+  </aside>
+  <section>
+    {% block contenido_admin %}{% endblock %}
+  </section>
+</div>
+{% endblock %}

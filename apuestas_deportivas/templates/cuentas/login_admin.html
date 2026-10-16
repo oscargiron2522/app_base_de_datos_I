@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block titulo %}Acceso administrativo{% endblock %}
+{% block contenido %}
+<div class="tarjeta form-ancho-fijo">
+  <h1>Acceso administrativo</h1>
+  <p style="color:var(--color-texto-suave);font-size:13px;">Uso exclusivo de operadores de eventos, cajeros, auditores y super administradores.</p>
+  <form method="post">
+    {% csrf_token %}
+    {% for campo in form %}
+      <div class="campo">
+        <label>{{ campo.label }}</label>
+        {{ campo }}
+        {% for error in campo.errors %}<div class="alerta alerta-error">{{ error }}</div>{% endfor %}
+      </div>
+    {% endfor %}
+    <button type="submit" class="boton">Ingresar</button>
+  </form>
+  <p style="margin-top:14px;"><a href="{% url 'cuentas:recuperar_solicitud' %}">¿Olvidaste tu contraseña?</a></p>
+</div>
+{% endblock %}

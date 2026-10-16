@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block titulo %}Mis cuentas bancarias{% endblock %}
+{% block contenido %}
+<h1>Mis cuentas bancarias</h1>
+<div class="tarjeta form-ancho-fijo">
+  <h3>Agregar cuenta</h3>
+  <form method="post">
+    {% csrf_token %}
+    {% for campo in form %}
+      <div class="campo"><label>{{ campo.label }}</label>{{ campo }}</div>
+    {% endfor %}
+    <button type="submit" class="boton">Guardar</button>
+  </form>
+</div>
+<div class="tabla-responsiva">
+<table>
+  <thead><tr><th>Banco</th><th>Número de cuenta</th><th>Tipo</th></tr></thead>
+  <tbody>
+  {% for cuenta in cuentas %}
+    <tr><td>{{ cuenta.nombre_banco }}</td><td>{{ cuenta.numero_cuenta }}</td><td>{{ cuenta.get_tipo_cuenta_display }}</td></tr>
+  {% empty %}
+    <tr><td colspan="3"><em>No has registrado cuentas bancarias.</em></td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endblock %}

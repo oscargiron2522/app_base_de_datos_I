@@ -1,0 +1,49 @@
+{% extends "apuestas/_panel_admin_base.html" %}
+{% block titulo %}Gestión de eventos{% endblock %}
+{% block contenido_admin %}
+<h1>Gestión de eventos deportivos</h1>
+
+<div class="tarjeta">
+  <h3>Registrar nuevo evento</h3>
+  <form method="post">
+    {% csrf_token %}
+    <div class="grid grid-2">
+      <div class="campo"><label>Liga</label>
+        <select name="id_liga">{% for l in ligas %}<option value="{{ l.id_liga }}">{{ l.nombre_liga }} ({{ l.id_deporte }})</option>{% endfor %}</select>
+      </div>
+      <div class="campo"><label>Equipo/atleta local</label>
+        <select name="id_equipo_local">{% for e in equipos %}<option value="{{ e.id_equipo }}">{{ e.nombre_equipo }}</option>{% endfor %}</select>
+      </div>
+      <div class="campo"><label>Equipo/atleta visitante</label>
+        <select name="id_equipo_visitante">{% for e in equipos %}<option value="{{ e.id_equipo }}">{{ e.nombre_equipo }}</option>{% endfor %}</select>
+      </div>
+      <div class="campo"><label>Fecha y hora</label><input type="datetime-local" name="fecha_inicio"></div>
+    </div>
+    <button type="submit" class="boton">Crear evento</button>
+  </form>
+</div>
+
+<h2>Eventos registrados</h2>
+<div class="tabla-responsiva">
+<table>
+  <thead><tr><th>#</th><th>Evento</th><th>Liga</th><th>Fecha</th><th>Estado</th><th>Acciones</th></tr></thead>
+  <tbody>
+    {% for evento in eventos %}
+    <tr>
+      <td>{{ evento.id_evento }}</td>
+      <td>{{ evento.id_equipo_local }} vs {{ evento.id_equipo_visitante }}</td>
+      <td>{{ evento.id_liga }}</td>
+      <td>{{ evento.fecha_inicio|date:"d/m/Y H:i" }}</td>
+      <td><span class="etiqueta etiqueta-{{ evento.estado_evento|lower }}">{{ evento.get_estado_evento_display }}</span></td>
+      <td>
+        <a class="boton boton-pequeno" href="{% url 'apuestas:admin_mercados_evento' evento.id_evento %}">Mercados</a>
+        {% if evento.estado_evento == "PROGRAMADO" %}
+          <a class="boton boton-pequeno boton-peligro" href="{% url 'apuestas:admin_liquidar_evento' evento.id_evento %}">Liquidar</a>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endblock %}
